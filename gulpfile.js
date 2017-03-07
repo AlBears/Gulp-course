@@ -5,9 +5,18 @@ var gulp = require('gulp'),
 gulp.task("dev:styles", devStyles);
 gulp.task("dev:scripts", devScripts);
 
-gulp.task('default', () => {
-
-});
+gulp.task('default',
+  gulp.series
+  (
+    clean,
+    gulp.parallel
+    (
+      devStyles,
+      devScripts
+    ),
+    publish
+    )
+  );
 
 function devStyles(c) {
   return gulp
@@ -26,6 +35,13 @@ function devScripts() {
 function clean(c) {
   setTimeout(() => {
     console.log('CLEANED');
+    c();
+  }, 1000);
+}
+
+function publish(c) {
+  setTimeout(() => {
+    console.log('PUBLISHED');
     c();
   }, 1000);
 }
