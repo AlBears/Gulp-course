@@ -21,5 +21,8 @@
     "gulp-rimraf": "^0.2.1",
     "gulp-sourcemaps": "^2.4.1",
     "gulp-uglify": "^2.0.1"
+  },
+  "dependencies": {
+    "gulp-livereload": "^3.8.1"
   }
 }

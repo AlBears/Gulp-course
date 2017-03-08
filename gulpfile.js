@@ -1,11 +1,13 @@
 var gulp = require('gulp'),
+    rimraf = require('rimraf'),
     $ = require('gulp-load-plugins')();
 
 const config = {
   styles: {
     src: ['./src/styles/site.less'],
     dest: './public/styles/',
-    autoprefix: ['last 2 versions']
+    autoprefix: ['last 2 versions'],
+    srcDirectory: ['./src/styles/**/*.{less, css}']
   },
 
   scripts: {
@@ -18,14 +20,24 @@ const config = {
 gulp.task("dev:styles", styles(false));
 gulp.task("dev:scripts", devScripts);
 
+gulp.task('clean:public', cb => rimraf(config.scripts.dest, cb));
+
 gulp.task('dev', gulp.parallel('dev:styles', 'dev:scripts'));
+gulp.task('dev:watch', gulp.series('dev', devWatch));
 
 gulp.task('prod:styles', styles(true));
-gulp.task('prod:scripts', prodScripts);
+gulp.task('prod:scripts', gulp.series('clean:public', prodScripts));
 
 gulp.task('prod', gulp.parallel('prod:styles', 'prod:scripts'));
 
 gulp.task('default', gulp.series('dev'));
+
+function devWatch() {
+  $.livereload.listen();
+
+  gulp.watch(config.styles.srcDirectory, gulp.series('dev:styles'));
+  gulp.watch(config.scripts.src, gulp.series('dev:scripts'));
+}
 
 function styles(isProduction) {
   return () => {
@@ -38,7 +50,8 @@ function styles(isProduction) {
       }))
       .pipe($.if(isProduction, $.minifyCss()))
       .pipe($.if(!isProduction, $.sourcemaps.write()))
-      .pipe(gulp.dest(config.styles.dest));
+      .pipe(gulp.dest(config.styles.dest))
+      .pipe($.livereload());
     }
 }
 
