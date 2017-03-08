@@ -1,36 +1,32 @@
 var gulp = require('gulp'),
-    // babel = require('gulp-babel'),
-    // less = require('gulp-less'),
-    // sourcemaps = require('gulp-sourcemaps'),
-    // autoprefixer = require('gulp-autoprefixer');
     $ = require('gulp-load-plugins')();
 
-gulp.task("dev:styles", devStyles);
+gulp.task("dev:styles", styles(false));
 gulp.task("dev:scripts", devScripts);
 
+gulp.task('prod:styles', styles(true))
+
 gulp.task('default',
-  gulp.series
-  (
-    clean,
     gulp.parallel
     (
-      devStyles,
+      'dev:styles',
       devScripts
-    ),
-    publish
     )
   );
 
-function devStyles(c) {
+function styles(isProduction) {
+  return () => {
   return gulp
       .src('./src/styles/site.less')
-      .pipe($.sourcemaps.init())
+      .pipe($.if(!isProduction, $.sourcemaps.init()))
       .pipe($.less())
       .pipe($.autoprefixer({
         browsers: ['last 2 versions']
       }))
-      .pipe($.sourcemaps.write())
+      .pipe($.if(isProduction, $.minifyCss()))
+      .pipe($.if(!isProduction, $.sourcemaps.write()))
       .pipe(gulp.dest('./public/styles'));
+    }
 }
 
 function devScripts() {
@@ -40,18 +36,4 @@ function devScripts() {
       .pipe($.babel())
       .pipe($.sourcemaps.write('.'))
       .pipe(gulp.dest('./public/scripts'));
-}
-
-function clean(c) {
-  setTimeout(() => {
-    console.log('CLEANED');
-    c();
-  }, 1000);
-}
-
-function publish(c) {
-  setTimeout(() => {
-    console.log('PUBLISHED');
-    c();
-  }, 1000);
 }
