@@ -12,3 +12,4 @@ var Person = function Person(name) {
 
 var person1 = new Person('ALB');
 console.log([pooh, person1]);
+//# sourceMappingURL=application.js.map

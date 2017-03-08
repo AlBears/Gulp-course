@@ -18,3 +18,4 @@ var Thing = function () {
 
   return Thing;
 }();
+//# sourceMappingURL=utility.js.map

@@ -1,6 +1,9 @@
 var gulp = require('gulp'),
-    babel = require('gulp-babel'),
-    less = require('gulp-less');
+    // babel = require('gulp-babel'),
+    // less = require('gulp-less'),
+    // sourcemaps = require('gulp-sourcemaps'),
+    // autoprefixer = require('gulp-autoprefixer');
+    $ = require('gulp-load-plugins')();
 
 gulp.task("dev:styles", devStyles);
 gulp.task("dev:scripts", devScripts);
@@ -21,14 +24,21 @@ gulp.task('default',
 function devStyles(c) {
   return gulp
       .src('./src/styles/site.less')
-      .pipe(less())
+      .pipe($.sourcemaps.init())
+      .pipe($.less())
+      .pipe($.autoprefixer({
+        browsers: ['last 2 versions']
+      }))
+      .pipe($.sourcemaps.write())
       .pipe(gulp.dest('./public/styles'));
 }
 
 function devScripts() {
   return gulp
       .src('./src/scripts/**/*.js')
-      .pipe(babel())
+      .pipe($.sourcemaps.init())
+      .pipe($.babel())
+      .pipe($.sourcemaps.write('.'))
       .pipe(gulp.dest('./public/scripts'));
 }
 

@@ -1,0 +1,1 @@
+{"version":3,"sources":["utility.js"],"names":["Thing"],"mappings":";;;;;;IAAMA,K;;;;;;;4BACI;AACN,aAAO,MAAP;AACD","file":"utility.js","sourcesContent":["class Thing {\n  stuff() {\n    return 'coco';\n  }\n}\n"]}
